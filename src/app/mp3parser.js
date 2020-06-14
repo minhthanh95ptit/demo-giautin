@@ -1,5 +1,5 @@
 /*
- * Provides a mechanism for iterating through
+ * Provides a mechanism for iterating through haha
  * an mp3 file frame by frame, and modifying their headers.
  * @param arrayBuffer: raw mp3 content in bytes
  */
@@ -25,12 +25,12 @@ function MP3Parser(arrayBuffer) {
     var bitrate, srate, padding;
 
     // Decode synchsafe integer
-    var _synchToInt = function(b) {
+    var _synchToInt = function (b) {
         return b[3] | (b[2] << 7) | (b[1] << 14) | (b[0] << 21);
     };
 
     // Detect tags and skip them (ID3v1 and ID3v2)
-    var _skipTags = function() {
+    var _skipTags = function () {
         // ID3v1
         var triplet = buffer.slice(end - 128, end - 125);
         var str = String.fromCharCode.apply(String, triplet);
@@ -47,7 +47,7 @@ function MP3Parser(arrayBuffer) {
     };
 
     // Unpack frame header audio metadata
-    var _unpack = function() {
+    var _unpack = function () {
         var byte = buffer[current + 2];
         bitrate = bitrateTable[byte >> 4];
         srate = srateTable[(byte & 0x0C) >> 2];
@@ -57,31 +57,32 @@ function MP3Parser(arrayBuffer) {
     _skipTags();
 
     // Get two least significant bytes of a frame header
-    this.getFrameHeader = function() {
+    this.getFrameHeader = function () {
         return buffer.slice(current + 2, current + 4);
     };
 
     // Set two least significant bytes of a frame header
-    this.setFrameHeader = function(header) {
+    this.setFrameHeader = function (header) {
         buffer[current + 2] = header[0];
         buffer[current + 3] = header[1];
     };
 
-    this.nextFrame = function() {
+    this.nextFrame = function () {
         _unpack();
         var offset = Math.trunc(144 * bitrate / srate + padding);
         current += offset;
     };
 
-    this.hasNext = function() {
+    this.hasNext = function () {
         return current < end;
     };
 
-    this.seekStart = function() {
+    this.seekStart = function () {
         current = start;
     };
 
-    this.getRaw = function() {
+    this.getRaw = function () {
         return buffer;
     };
 }
+
